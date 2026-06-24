@@ -62,10 +62,6 @@ export default function CartPage() {
 
   return (
     <div className="pb-8">
-      <button onClick={() => router.back()} className="flex items-center gap-1.5 text-gray-400 hover:text-gray-600 transition text-sm mb-4">
-        <span className="text-lg">←</span> 이전으로
-      </button>
-
       <h1 className="text-2xl font-black text-gray-900 mb-6">장바구니</h1>
 
       {cart.length === 0 ? (

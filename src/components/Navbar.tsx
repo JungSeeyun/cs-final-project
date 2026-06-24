@@ -22,7 +22,7 @@ export default function Navbar() {
     <nav className="sticky top-0 z-40 bg-gradient-to-r from-orange-500 to-rose-500 text-white px-6 py-4 flex items-center justify-between shadow-lg">
       <Link href="/restaurants" className="flex items-center gap-2">
         <span className="bg-white/20 rounded-xl px-2 py-1 text-xl">🛵</span>
-        <span className="text-lg font-black tracking-tight">배달앱</span>
+        <span className="text-lg font-black tracking-tight">BabBab</span>
       </Link>
 
       <div className="flex gap-4 items-center text-sm font-medium">

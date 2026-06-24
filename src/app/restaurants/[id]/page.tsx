@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 
 interface MenuItem { id: number; name: string; description: string; price: number; }
@@ -16,7 +16,6 @@ const CATEGORY_STYLE: Record<string, { emoji: string; gradient: string }> = {
 
 export default function RestaurantPage() {
   const { id } = useParams();
-  const router = useRouter();
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [menu, setMenu] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -136,11 +135,6 @@ export default function RestaurantPage() {
           </div>
         </div>
       )}
-
-      {/* 뒤로가기 */}
-      <button onClick={() => router.back()} className="flex items-center gap-1.5 text-gray-400 hover:text-gray-600 transition text-sm mb-4">
-        <span className="text-lg">←</span> 이전으로
-      </button>
 
       {/* 식당 헤더 */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-5">

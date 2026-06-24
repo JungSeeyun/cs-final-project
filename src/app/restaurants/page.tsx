@@ -2,6 +2,24 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
+const RANDOM_FOODS = [
+  { name: '치킨', emoji: '🍗' },
+  { name: '피자', emoji: '🍕' },
+  { name: '초밥', emoji: '🍣' },
+  { name: '비빔밥', emoji: '🍚' },
+  { name: '라면', emoji: '🍜' },
+  { name: '떡볶이', emoji: '🌶️' },
+  { name: '삼겹살', emoji: '🥩' },
+  { name: '파스타', emoji: '🍝' },
+  { name: '타코', emoji: '🌮' },
+  { name: '샐러드', emoji: '🥗' },
+  { name: '김치찌개', emoji: '🍲' },
+  { name: '냉면', emoji: '🍱' },
+  { name: '햄버거', emoji: '🍔' },
+  { name: '국밥', emoji: '🥣' },
+  { name: '순대국', emoji: '🫕' },
+];
+
 interface Restaurant {
   id: number;
   name: string;
@@ -24,6 +42,12 @@ export default function RestaurantsPage() {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState('전체');
+  const [luckyFood, setLuckyFood] = useState<{ name: string; emoji: string } | null>(null);
+
+  function pickLuckyFood() {
+    const pick = RANDOM_FOODS[Math.floor(Math.random() * RANDOM_FOODS.length)];
+    setLuckyFood(pick);
+  }
 
   useEffect(() => {
     fetch('/api/restaurants')
@@ -44,10 +68,31 @@ export default function RestaurantsPage() {
 
   return (
     <div>
+      {/* 음식운 결과 모달 */}
+      {luckyFood && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setLuckyFood(null)}>
+          <div className="bg-white rounded-3xl p-8 w-full max-w-xs shadow-2xl text-center" onClick={e => e.stopPropagation()}>
+            <div className="text-6xl mb-3">{luckyFood.emoji}</div>
+            <p className="text-xs text-gray-400 mb-1">오늘의 음식운은...</p>
+            <h2 className="text-3xl font-black text-gray-900">{luckyFood.name}</h2>
+            <p className="text-sm text-gray-400 mt-2">오늘은 {luckyFood.name} 어때요? 😋</p>
+            <div className="flex gap-2 mt-6">
+              <button onClick={() => setLuckyFood(null)} className="flex-1 py-3 rounded-xl border-2 border-gray-200 text-sm font-semibold text-gray-500 hover:bg-gray-50 transition">닫기</button>
+              <button onClick={pickLuckyFood} className="flex-1 py-3 rounded-xl bg-gradient-to-r from-orange-500 to-rose-500 text-white text-sm font-bold hover:opacity-90 transition">다시 뽑기</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 히어로 */}
       <div className="bg-gradient-to-r from-orange-500 to-rose-500 rounded-3xl p-6 mb-6 text-white">
-        <p className="text-sm font-medium opacity-80">오늘도 맛있게 🍽️</p>
-        <h1 className="text-2xl font-black mt-1">뭐 드실래요?</h1>
+        <p className="text-sm font-medium opacity-80">오늘 뭐 먹지? 🍽️</p>
+        <button
+          onClick={pickLuckyFood}
+          className="mt-2 bg-white/20 hover:bg-white/30 active:scale-95 transition-all text-white font-black text-xl rounded-2xl px-5 py-2.5 flex items-center gap-2"
+        >
+          🎲 오늘의 음식운은?
+        </button>
       </div>
 
       {/* 카테고리 필터 */}

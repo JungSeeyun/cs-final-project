@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+import { Pool } from '@neondatabase/serverless';
 
 declare global {
   var _pgPool: Pool | undefined;
@@ -6,10 +6,6 @@ declare global {
 
 const pool = globalThis._pgPool ?? new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DATABASE_URL?.includes('neon.tech')
-    ? { rejectUnauthorized: false }
-    : false,
-  max: 10,
 });
 
 if (process.env.NODE_ENV !== 'production') {

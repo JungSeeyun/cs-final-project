@@ -19,7 +19,8 @@ export default function OrdersPage() {
   useEffect(() => {
     fetch('/api/orders')
       .then(res => { if (res.status === 401) { router.push('/auth/login'); return null; } return res.json(); })
-      .then(data => { if (data) setOrders(data.orders ?? []); setLoading(false); });
+      .then(data => { if (data) setOrders(data.orders ?? []); setLoading(false); })
+      .catch(() => setLoading(false));
   }, []);
 
   if (loading) return (
@@ -31,10 +32,6 @@ export default function OrdersPage() {
 
   return (
     <div className="pb-8">
-      <button onClick={() => router.back()} className="flex items-center gap-1.5 text-gray-400 hover:text-gray-600 transition text-sm mb-4">
-        <span className="text-lg">←</span> 이전으로
-      </button>
-
       <h1 className="text-2xl font-black text-gray-900 mb-6">주문 내역</h1>
 
       {orders.length === 0 ? (
