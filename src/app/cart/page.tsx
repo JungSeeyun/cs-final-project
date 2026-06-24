@@ -2,20 +2,14 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-interface CartItem {
-  id: number;
-  menu_item_id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  restaurant_name: string;
-}
+interface CartItem { id: number; name: string; price: number; quantity: number; restaurant_name: string; }
 
 export default function CartPage() {
   const router = useRouter();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [ordering, setOrdering] = useState(false);
+  const [ordered, setOrdered] = useState(false);
 
   async function fetchCart() {
     const res = await fetch('/api/cart');
@@ -41,10 +35,9 @@ export default function CartPage() {
     const res = await fetch('/api/orders', { method: 'POST' });
     const data = await res.json();
     setOrdering(false);
-
     if (res.ok) {
-      alert(`주문 완료! 주문번호: ${data.orderId}`);
-      router.push('/orders');
+      setOrdered(true);
+      setTimeout(() => router.push('/orders'), 1500);
     } else {
       alert(data.error);
     }
@@ -52,53 +45,75 @@ export default function CartPage() {
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  if (loading) return <div className="text-center py-20 text-gray-400">불러오는 중...</div>;
+  if (loading) return (
+    <div className="flex flex-col items-center justify-center py-32 gap-3">
+      <div className="text-4xl animate-bounce">🛒</div>
+      <p className="text-gray-400 text-sm">불러오는 중...</p>
+    </div>
+  );
+
+  if (ordered) return (
+    <div className="flex flex-col items-center justify-center py-32 gap-3">
+      <div className="text-6xl">🎉</div>
+      <h2 className="text-xl font-black text-gray-900">주문 완료!</h2>
+      <p className="text-sm text-gray-400">주문 내역으로 이동합니다...</p>
+    </div>
+  );
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">🛒 장바구니</h1>
+    <div className="pb-8">
+      <button onClick={() => router.back()} className="flex items-center gap-1.5 text-gray-400 hover:text-gray-600 transition text-sm mb-4">
+        <span className="text-lg">←</span> 이전으로
+      </button>
+
+      <h1 className="text-2xl font-black text-gray-900 mb-6">장바구니</h1>
 
       {cart.length === 0 ? (
-        <div className="text-center py-20 text-gray-400">
-          <p className="text-4xl mb-3">🛒</p>
-          <p>장바구니가 비어있습니다</p>
+        <div className="text-center py-24 text-gray-400">
+          <p className="text-5xl mb-4">🛒</p>
+          <p className="font-semibold text-gray-500">장바구니가 비어있어요</p>
+          <p className="text-sm mt-1">맛있는 메뉴를 담아보세요</p>
+          <button onClick={() => router.push('/restaurants')} className="mt-6 bg-gradient-to-r from-orange-500 to-rose-500 text-white px-6 py-3 rounded-full font-bold text-sm shadow-md">
+            식당 보러가기
+          </button>
         </div>
       ) : (
         <>
-          {cart[0] && (
-            <p className="text-sm text-gray-500 mb-4">
-              📍 {cart[0].restaurant_name}
-            </p>
-          )}
+          <div className="bg-orange-50 rounded-2xl px-4 py-3 mb-4 flex items-center gap-2">
+            <span className="text-lg">📍</span>
+            <span className="text-sm font-semibold text-orange-700">{cart[0].restaurant_name}</span>
+          </div>
+
           <div className="space-y-3 mb-6">
             {cart.map(item => (
-              <div key={item.id} className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex items-center justify-between">
+              <div key={item.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex items-center justify-between">
                 <div>
-                  <h3 className="font-semibold text-gray-900">{item.name}</h3>
-                  <p className="text-sm text-gray-500">수량: {item.quantity}개</p>
-                  <p className="text-orange-500 font-bold">{(item.price * item.quantity).toLocaleString()}원</p>
+                  <h3 className="font-bold text-gray-900 text-sm">{item.name}</h3>
+                  <p className="text-xs text-gray-400 mt-0.5">수량 {item.quantity}개</p>
+                  <p className="text-orange-500 font-black mt-1">{(item.price * item.quantity).toLocaleString()}원</p>
                 </div>
                 <button
                   onClick={() => removeItem(item.id)}
-                  className="text-gray-400 hover:text-red-500 transition text-sm px-3 py-1 border border-gray-200 rounded-lg"
+                  className="ml-4 text-gray-300 hover:text-red-400 transition text-xl"
                 >
-                  삭제
+                  ✕
                 </button>
               </div>
             ))}
           </div>
 
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-gray-600">총 금액</span>
-              <span className="text-xl font-bold text-orange-500">{total.toLocaleString()}원</span>
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm text-gray-500">메뉴 {cart.length}개</span>
+              <span className="text-2xl font-black text-gray-900">{total.toLocaleString()}원</span>
             </div>
+            <p className="text-xs text-gray-400 mb-4">배달비 별도</p>
             <button
               onClick={placeOrder}
               disabled={ordering}
-              className="w-full bg-orange-500 text-white py-3 rounded-xl font-bold text-lg hover:bg-orange-600 transition disabled:opacity-50"
+              className="w-full bg-gradient-to-r from-orange-500 to-rose-500 text-white py-4 rounded-2xl font-black text-base hover:opacity-90 transition disabled:opacity-50 shadow-md"
             >
-              {ordering ? '주문 중...' : '주문하기'}
+              {ordering ? '주문 중...' : `${total.toLocaleString()}원 주문하기`}
             </button>
           </div>
         </>

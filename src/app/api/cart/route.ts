@@ -59,7 +59,11 @@ export async function DELETE(req: NextRequest) {
   const userId = getUserId(req);
   if (!userId) return NextResponse.json({ error: '인증 오류' }, { status: 401 });
 
-  const { cartItemId } = await req.json();
-  await query('DELETE FROM cart_items WHERE id = $1 AND user_id = $2', [cartItemId, userId]);
+  const { cartItemId, clearAll } = await req.json();
+  if (clearAll) {
+    await query('DELETE FROM cart_items WHERE user_id = $1', [userId]);
+  } else {
+    await query('DELETE FROM cart_items WHERE id = $1 AND user_id = $2', [cartItemId, userId]);
+  }
   return NextResponse.json({ message: '삭제됐습니다' });
 }
