@@ -7,13 +7,15 @@ declare global {
 // Remove sslmode/channel_binding from the URL so pg v8 doesn't override
 // the explicit ssl option below (pg v8 treats sslmode=require as verify-full).
 function getConnectionString() {
+  // Remove BOM that PowerShell's UTF-8 Out-File adds to env vars stored via file pipes
+  const raw = (process.env.DATABASE_URL ?? '').replace(/^﻿/, '');
   try {
-    const url = new URL(process.env.DATABASE_URL ?? '');
+    const url = new URL(raw);
     url.searchParams.delete('sslmode');
     url.searchParams.delete('channel_binding');
     return url.toString();
   } catch {
-    return process.env.DATABASE_URL ?? '';
+    return raw;
   }
 }
 
