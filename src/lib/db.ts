@@ -1,4 +1,7 @@
-import { Pool } from '@neondatabase/serverless';
+import { Pool, neonConfig } from '@neondatabase/serverless';
+import ws from 'ws';
+
+neonConfig.webSocketConstructor = ws;
 
 declare global {
   var _pgPool: Pool | undefined;
@@ -13,8 +16,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 export async function query(text: string, params?: unknown[]) {
-  const result = await pool.query(text, params);
-  return result;
+  return pool.query(text, params);
 }
 
 export default pool;
