@@ -59,11 +59,17 @@ export default function OrdersPage() {
   const syncedStatus = useRef<Record<number, string>>({});
 
   // 리뷰 모달 상태
-  const [reviewTarget, setReviewTarget] = useState<{ restaurantId: number; restaurantName: string } | null>(null);
+  const [reviewTarget, setReviewTarget] = useState<{ orderId: number; restaurantId: number; restaurantName: string } | null>(null);
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewContent, setReviewContent] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState('');
+  const [reviewedOrders, setReviewedOrders] = useState<Set<number>>(() => {
+    try {
+      const saved = localStorage.getItem('reviewedOrders');
+      return saved ? new Set(JSON.parse(saved)) : new Set();
+    } catch { return new Set(); }
+  });
 
   useEffect(() => {
     fetch('/api/orders')
@@ -103,6 +109,10 @@ export default function OrdersPage() {
     });
     setSubmitting(false);
     if (res.ok) {
+      // 해당 주문은 다시 리뷰 못 쓰게 기록
+      const newSet = new Set(reviewedOrders).add(reviewTarget.orderId);
+      setReviewedOrders(newSet);
+      localStorage.setItem('reviewedOrders', JSON.stringify([...newSet]));
       setReviewTarget(null);
       setReviewRating(0);
       setReviewContent('');
@@ -223,12 +233,15 @@ export default function OrdersPage() {
                   </div>
 
                   {/* 배달 완료된 주문에만 리뷰 버튼 표시 */}
-                  {isDone && (
+                  {isDone && !reviewedOrders.has(order.id) && (
                     <button
-                      onClick={() => { setReviewTarget({ restaurantId: order.restaurant_id, restaurantName: order.restaurant_name }); setReviewRating(0); setReviewContent(''); }}
+                      onClick={() => { setReviewTarget({ orderId: order.id, restaurantId: order.restaurant_id, restaurantName: order.restaurant_name }); setReviewRating(0); setReviewContent(''); }}
                       className="mt-3 w-full py-2.5 rounded-xl border-2 border-yellow-400 text-yellow-600 font-bold text-sm hover:bg-yellow-50 transition">
                       ✏️ 리뷰 쓰기!
                     </button>
+                  )}
+                  {isDone && reviewedOrders.has(order.id) && (
+                    <p className="mt-3 text-center text-xs text-gray-400 py-2">✅ 리뷰를 작성했습니다</p>
                   )}
                 </div>
               </div>
