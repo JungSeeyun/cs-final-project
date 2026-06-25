@@ -19,29 +19,29 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="sticky top-0 z-40 bg-yellow-400 px-6 py-4 flex items-center justify-between shadow-sm">
+    <nav className="sticky top-0 z-40 bg-white border-b border-gray-100 px-6 py-3.5 flex items-center justify-between">
       <Link href="/restaurants" className="flex items-center gap-2">
         <span className="text-xl">🛵</span>
         <span className="text-lg font-black tracking-tight text-gray-900">BabBab</span>
       </Link>
 
-      <div className="flex gap-4 items-center text-sm font-medium">
-        <Link href="/restaurants" className="text-gray-800 hover:text-gray-600 transition hidden sm:block font-semibold">식당</Link>
+      <div className="flex gap-1 items-center text-sm font-medium">
+        <Link href="/restaurants" className="text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition px-3 py-1.5 rounded-lg hidden sm:block">식당</Link>
         {user && (
           <>
-            <Link href="/cart" className="text-gray-800 hover:text-gray-600 transition font-semibold">🛒 장바구니</Link>
-            <Link href="/orders" className="text-gray-800 hover:text-gray-600 transition hidden sm:block font-semibold">📋 주문내역</Link>
+            <Link href="/cart" className="text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition px-3 py-1.5 rounded-lg">🛒 장바구니</Link>
+            <Link href="/orders" className="text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition px-3 py-1.5 rounded-lg hidden sm:block">📋 주문내역</Link>
           </>
         )}
         {user ? (
-          <div className="flex items-center gap-2">
-            <span className="bg-gray-900 text-yellow-400 rounded-full px-3 py-1 text-xs font-bold">{user.name}님</span>
-            <button onClick={logout} className="bg-white text-gray-900 px-3 py-1 rounded-full text-xs font-bold hover:bg-gray-100 transition">
+          <div className="flex items-center gap-2 ml-2">
+            <span className="text-xs font-semibold text-gray-500 hidden sm:block">{user.name}님</span>
+            <button onClick={logout} className="border border-gray-200 text-gray-600 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-gray-50 transition">
               로그아웃
             </button>
           </div>
         ) : (
-          <Link href="/auth/login" className="bg-gray-900 text-yellow-400 px-4 py-1.5 rounded-full text-xs font-bold hover:bg-gray-800 transition">
+          <Link href="/auth/login" className="ml-2 bg-gray-900 text-white px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-gray-700 transition">
             로그인
           </Link>
         )}

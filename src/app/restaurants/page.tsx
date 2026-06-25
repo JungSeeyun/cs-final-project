@@ -19,10 +19,10 @@ interface Restaurant {
 const CATEGORIES = ['전체', '치킨', '피자', '일식', '한식'];
 const CAT_EMOJI: Record<string, string> = { 치킨: '🍗', 피자: '🍕', 일식: '🍣', 한식: '🍚' };
 const CAT_COLOR: Record<string, string> = {
-  치킨: 'bg-yellow-50 text-yellow-700 border-yellow-200',
-  피자: 'bg-red-50 text-red-700 border-red-200',
-  일식: 'bg-blue-50 text-blue-700 border-blue-200',
-  한식: 'bg-green-50 text-green-700 border-green-200',
+  치킨: 'bg-amber-50 text-amber-700',
+  피자: 'bg-red-50 text-red-600',
+  일식: 'bg-blue-50 text-blue-600',
+  한식: 'bg-green-50 text-green-700',
 };
 
 function Stars({ rating }: { rating: number }) {
@@ -64,7 +64,7 @@ export default function RestaurantsPage() {
   );
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div>
       {/* 음식운 모달 */}
       {luckyFood && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setLuckyFood(null)}>
@@ -74,91 +74,101 @@ export default function RestaurantsPage() {
             <h2 className="text-3xl font-black text-gray-900 mb-1">{luckyFood.name}</h2>
             <p className="text-sm text-gray-400">오늘은 {luckyFood.name} 어때요? 😋</p>
             <div className="flex gap-2 mt-6">
-              <button onClick={() => setLuckyFood(null)} className="flex-1 py-3 rounded-2xl border-2 border-gray-100 text-sm font-semibold text-gray-400 hover:bg-gray-50 transition">닫기</button>
-              <button onClick={() => setLuckyFood(RANDOM_FOODS[Math.floor(Math.random() * RANDOM_FOODS.length)])} className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-orange-500 to-rose-500 text-white text-sm font-bold hover:opacity-90 transition">다시 뽑기 🎲</button>
+              <button onClick={() => setLuckyFood(null)} className="flex-1 py-3 rounded-2xl border border-gray-200 text-sm font-semibold text-gray-500 hover:bg-gray-50 transition">닫기</button>
+              <button onClick={() => setLuckyFood(RANDOM_FOODS[Math.floor(Math.random() * RANDOM_FOODS.length)])} className="flex-1 py-3 rounded-2xl bg-yellow-400 text-gray-900 text-sm font-bold hover:bg-yellow-500 transition">다시 뽑기 🎲</button>
             </div>
           </div>
         </div>
       )}
 
-      {/* 히어로 */}
-      <div className="bg-yellow-400 rounded-3xl p-6 mb-5 relative overflow-hidden">
-        <div className="absolute -right-4 -top-4 text-8xl opacity-10 select-none">🍔</div>
-        <div className="absolute right-16 -bottom-2 text-6xl opacity-10 select-none">🍕</div>
-        <p className="text-sm font-semibold text-gray-700 mb-1">BabBab 🛵</p>
-        <h1 className="text-2xl font-black text-gray-900 mb-4">오늘 뭐 먹지?</h1>
-        <button onClick={() => setLuckyFood(RANDOM_FOODS[Math.floor(Math.random() * RANDOM_FOODS.length)])}
-          className="bg-gray-900 text-yellow-400 font-bold rounded-2xl px-5 py-2.5 text-sm flex items-center gap-2 transition hover:bg-gray-800 active:scale-95">
-          🎲 오늘의 음식운은?
-        </button>
-      </div>
-
-      {/* 검색 */}
-      <div className="relative mb-4">
-        <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        <input
-          type="text" value={search} onChange={e => setSearch(e.target.value)}
-          placeholder="식당명, 메뉴, 카테고리 검색"
-          className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-100 rounded-2xl text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-transparent"
-        />
-        {search && (
-          <button onClick={() => setSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-500">✕</button>
-        )}
-      </div>
-
-      {/* 카테고리 */}
-      <div className="flex gap-2 overflow-x-auto pb-2 mb-5 scrollbar-hide">
-        {CATEGORIES.map(cat => (
-          <button key={cat} onClick={() => setSelected(cat)}
-            className={`shrink-0 px-4 py-2 rounded-full text-sm font-semibold transition-all ${
-              selected === cat
-                ? 'bg-yellow-400 text-gray-900 shadow-md shadow-yellow-200 scale-105'
-                : 'bg-white text-gray-500 border border-gray-100 shadow-sm hover:border-yellow-300'
-            }`}>
-            {CAT_EMOJI[cat] && <span className="mr-1">{CAT_EMOJI[cat]}</span>}{cat}
+      {/* 히어로 — 가로 레이아웃, 노란색 유지 */}
+      <div className="bg-yellow-400 rounded-2xl px-8 py-6 mb-6 flex items-center justify-between overflow-hidden relative">
+        <div>
+          <p className="text-sm font-semibold text-yellow-800 mb-1">BabBab 배달 🛵</p>
+          <h1 className="text-3xl font-black text-gray-900 mb-4">오늘 뭐 먹지?</h1>
+          <button
+            onClick={() => setLuckyFood(RANDOM_FOODS[Math.floor(Math.random() * RANDOM_FOODS.length)])}
+            className="bg-gray-900 text-yellow-400 font-bold rounded-xl px-5 py-2.5 text-sm flex items-center gap-2 hover:bg-gray-800 active:scale-95 transition">
+            🎲 오늘의 음식운은?
           </button>
-        ))}
+        </div>
+        <div className="hidden sm:grid grid-cols-3 gap-2 text-4xl select-none opacity-80 shrink-0">
+          {['🍗','🍕','🍣','🍚','🍜','🥩'].map(e => (
+            <span key={e} className="flex items-center justify-center w-12 h-12 bg-yellow-300/60 rounded-xl">{e}</span>
+          ))}
+        </div>
       </div>
 
-      {/* 식당 수 */}
-      {search && (
-        <p className="text-xs text-gray-400 mb-3 px-1">
-          "{search}" 검색결과 <span className="font-bold text-yellow-600">{filtered.length}개</span>
-        </p>
-      )}
+      {/* 검색 + 카테고리 한 줄 */}
+      <div className="flex gap-3 mb-5 items-center">
+        <div className="relative flex-1">
+          <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input type="text" value={search} onChange={e => setSearch(e.target.value)}
+            placeholder="식당명, 카테고리 검색"
+            className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-transparent" />
+          {search && <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-500 text-xs">✕</button>}
+        </div>
+        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide shrink-0">
+          {CATEGORIES.map(cat => (
+            <button key={cat} onClick={() => setSelected(cat)}
+              className={`shrink-0 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all ${
+                selected === cat
+                  ? 'bg-gray-900 text-white'
+                  : 'bg-white text-gray-500 border border-gray-200 hover:border-gray-400'
+              }`}>
+              {CAT_EMOJI[cat] && <span className="mr-1">{CAT_EMOJI[cat]}</span>}{cat}
+            </button>
+          ))}
+        </div>
+      </div>
 
-      {/* 식당 목록 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {/* 결과 수 */}
+      <div className="flex items-center justify-between mb-4">
+        <p className="text-sm text-gray-500 font-medium">
+          {search ? <><span className="text-gray-900 font-bold">"{search}"</span> 검색결과 </> : '전체 '}
+          <span className="font-bold text-gray-900">{filtered.length}개</span>
+        </p>
+      </div>
+
+      {/* 식당 그리드 — 3열 */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.map(r => (
           <Link key={r.id} href={`/restaurants/${r.id}`}>
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer group">
+            <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all cursor-pointer group">
               {/* 이미지 */}
-              <div className="h-36 overflow-hidden relative bg-gray-100">
+              <div className="h-44 overflow-hidden relative bg-gray-100">
                 {r.image_url
-                  ? <img src={r.image_url} alt={r.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                  : <div className="w-full h-full flex items-center justify-center text-5xl">{CAT_EMOJI[r.category] ?? '🍽️'}</div>
+                  ? <img src={r.image_url} alt={r.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  : <div className="w-full h-full flex items-center justify-center text-6xl">{CAT_EMOJI[r.category] ?? '🍽️'}</div>
                 }
-                <span className={`absolute top-2 right-2 text-xs px-2.5 py-0.5 rounded-full font-semibold border ${CAT_COLOR[r.category] ?? 'bg-gray-50 text-gray-500 border-gray-200'}`}>
+                {/* 카테고리 뱃지 */}
+                <span className={`absolute top-2.5 left-2.5 text-xs px-2 py-0.5 rounded-lg font-bold ${CAT_COLOR[r.category] ?? 'bg-gray-100 text-gray-600'}`}>
                   {CAT_EMOJI[r.category]} {r.category}
                 </span>
+                {/* 배달 시간 뱃지 */}
+                <span className="absolute bottom-2.5 right-2.5 bg-black/60 text-white text-xs px-2 py-0.5 rounded-lg font-semibold backdrop-blur-sm">
+                  ⏱ {r.delivery_time}분
+                </span>
               </div>
+
               {/* 정보 */}
-              <div className="p-3.5">
-                <h2 className="font-bold text-gray-900 text-[15px] mb-0.5">{r.name}</h2>
-                <p className="text-xs text-gray-400 line-clamp-1 mb-2">{r.description}</p>
+              <div className="p-4">
+                <h2 className="font-black text-gray-900 text-base mb-0.5">{r.name}</h2>
+                <p className="text-xs text-gray-400 line-clamp-2 mb-3 leading-relaxed">{r.description}</p>
+
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
+                  {/* 평점 */}
+                  <div className="flex items-center gap-1">
                     <Stars rating={Number(r.avg_rating)} />
-                    <span className="text-xs font-bold text-gray-700">{Number(r.avg_rating) > 0 ? Number(r.avg_rating).toFixed(1) : '신규'}</span>
+                    <span className="text-xs font-bold text-gray-700 ml-0.5">
+                      {Number(r.avg_rating) > 0 ? Number(r.avg_rating).toFixed(1) : '신규'}
+                    </span>
                     {r.review_count > 0 && <span className="text-xs text-gray-400">({r.review_count})</span>}
                   </div>
-                </div>
-                <div className="flex items-center gap-2 mt-2 text-xs text-gray-400">
-                  <span className="flex items-center gap-1">⏱ {r.delivery_time}분</span>
-                  <span className="text-gray-200">|</span>
-                  <span>최소 {r.min_order.toLocaleString()}원</span>
+                  {/* 최소주문 */}
+                  <span className="text-xs text-gray-400">최소 <span className="font-semibold text-gray-600">{r.min_order.toLocaleString()}원</span></span>
                 </div>
               </div>
             </div>
@@ -167,7 +177,7 @@ export default function RestaurantsPage() {
       </div>
 
       {filtered.length === 0 && (
-        <div className="text-center py-20 text-gray-400">
+        <div className="text-center py-24 text-gray-400">
           <p className="text-4xl mb-3">🔍</p>
           <p className="font-semibold text-gray-500 mb-1">검색 결과가 없어요</p>
           <p className="text-sm">다른 키워드로 검색해보세요</p>
