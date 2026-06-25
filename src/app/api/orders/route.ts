@@ -5,11 +5,7 @@ import { query } from '@/lib/db';
 function getUserId(req: NextRequest): number | null {
   const token = getTokenFromRequest(req);
   if (!token) return null;
-  try {
-    return verifyToken(token).userId;
-  } catch {
-    return null;
-  }
+  try { return verifyToken(token).userId; } catch { return null; }
 }
 
 export async function GET(req: NextRequest) {
@@ -17,7 +13,8 @@ export async function GET(req: NextRequest) {
   if (!userId) return NextResponse.json({ error: '인증 오류' }, { status: 401 });
 
   const ordersResult = await query(
-    `SELECT o.id, o.total_price, o.status, o.created_at, r.name as restaurant_name
+    `SELECT o.id, o.total_price, o.status, o.created_at,
+            r.name as restaurant_name, r.delivery_time
      FROM orders o
      JOIN restaurants r ON o.restaurant_id = r.id
      WHERE o.user_id = $1
@@ -58,9 +55,7 @@ export async function POST(req: NextRequest) {
   );
 
   const cart = cartResult.rows;
-  if (cart.length === 0) {
-    return NextResponse.json({ error: '장바구니가 비어있습니다' }, { status: 400 });
-  }
+  if (cart.length === 0) return NextResponse.json({ error: '장바구니가 비어있습니다' }, { status: 400 });
 
   const restaurantId = cart[0].restaurant_id;
   const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -79,6 +74,5 @@ export async function POST(req: NextRequest) {
   }
 
   await query('DELETE FROM cart_items WHERE user_id = $1', [userId]);
-
   return NextResponse.json({ message: '주문 완료!', orderId }, { status: 201 });
 }
