@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface OrderItem { name: string; quantity: number; price_at_order: number; }
@@ -14,6 +14,9 @@ function fmtTime(seconds: number) {
   if (m > 0) return `${m}분 ${s}초`;
   return `${s}초`;
 }
+
+// DB status values per phase
+const PHASE_STATUS = ['pending', 'preparing', 'delivering', 'done'] as const;
 
 function getPhase(createdAt: string, deliveryMinutes: number, now: number) {
   const elapsed = (now - new Date(createdAt).getTime()) / 1000;
@@ -53,6 +56,8 @@ export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [now, setNow] = useState(() => Date.now());
+  // 주문별 마지막으로 DB에 저장한 status 추적 (같은 값 중복 호출 방지)
+  const syncedStatus = useRef<Record<number, string>>({});
 
   useEffect(() => {
     fetch('/api/orders')
@@ -65,6 +70,21 @@ export default function OrdersPage() {
     const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);
   }, []);
+
+  // now가 바뀔 때마다 각 주문의 단계를 계산하고 DB status가 달라지면 PATCH
+  useEffect(() => {
+    orders.forEach(order => {
+      const { phase } = getPhase(order.created_at, order.delivery_time, now);
+      const newStatus = PHASE_STATUS[phase];
+      if (syncedStatus.current[order.id] === newStatus) return;
+      syncedStatus.current[order.id] = newStatus;
+      fetch(`/api/orders/${order.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+    });
+  }, [now, orders]);
 
   if (loading) return (
     <div className="flex flex-col items-center justify-center py-40 gap-3">
