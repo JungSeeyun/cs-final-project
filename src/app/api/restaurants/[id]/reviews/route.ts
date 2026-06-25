@@ -25,14 +25,6 @@ export async function POST(
     return NextResponse.json({ error: '리뷰 내용을 입력해주세요' }, { status: 400 });
   }
 
-  const existing = await query(
-    'SELECT id FROM reviews WHERE restaurant_id = $1 AND user_id = $2',
-    [id, userId]
-  );
-  if (existing.rows.length > 0) {
-    return NextResponse.json({ error: '이미 리뷰를 작성했습니다' }, { status: 409 });
-  }
-
   await query(
     'INSERT INTO reviews (restaurant_id, user_id, rating, content) VALUES ($1, $2, $3, $4)',
     [id, userId, rating, content.trim()]
