@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
 
   const ordersResult = await query(
     `SELECT o.id, o.total_price, o.status, o.created_at,
-            r.name as restaurant_name, r.delivery_time
+            r.id as restaurant_id, r.name as restaurant_name, r.delivery_time
      FROM orders o
      JOIN restaurants r ON o.restaurant_id = r.id
      WHERE o.user_id = $1
