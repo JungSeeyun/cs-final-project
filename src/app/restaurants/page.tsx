@@ -82,13 +82,13 @@ export default function RestaurantsPage() {
       )}
 
       {/* 히어로 */}
-      <div className="bg-gradient-to-br from-orange-500 via-orange-400 to-rose-500 rounded-3xl p-6 mb-5 text-white relative overflow-hidden">
-        <div className="absolute -right-4 -top-4 text-8xl opacity-20 select-none">🍔</div>
-        <div className="absolute right-16 -bottom-2 text-6xl opacity-20 select-none">🍕</div>
-        <p className="text-sm font-medium opacity-90 mb-1">배달의 민족 BabBab 🛵</p>
-        <h1 className="text-2xl font-black mb-4">오늘 뭐 먹지?</h1>
+      <div className="bg-yellow-400 rounded-3xl p-6 mb-5 relative overflow-hidden">
+        <div className="absolute -right-4 -top-4 text-8xl opacity-10 select-none">🍔</div>
+        <div className="absolute right-16 -bottom-2 text-6xl opacity-10 select-none">🍕</div>
+        <p className="text-sm font-semibold text-gray-700 mb-1">BabBab 🛵</p>
+        <h1 className="text-2xl font-black text-gray-900 mb-4">오늘 뭐 먹지?</h1>
         <button onClick={() => setLuckyFood(RANDOM_FOODS[Math.floor(Math.random() * RANDOM_FOODS.length)])}
-          className="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 text-white font-bold rounded-2xl px-5 py-2.5 text-sm flex items-center gap-2 transition active:scale-95">
+          className="bg-gray-900 text-yellow-400 font-bold rounded-2xl px-5 py-2.5 text-sm flex items-center gap-2 transition hover:bg-gray-800 active:scale-95">
           🎲 오늘의 음식운은?
         </button>
       </div>
@@ -101,7 +101,7 @@ export default function RestaurantsPage() {
         <input
           type="text" value={search} onChange={e => setSearch(e.target.value)}
           placeholder="식당명, 메뉴, 카테고리 검색"
-          className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-100 rounded-2xl text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-transparent"
+          className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-100 rounded-2xl text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-transparent"
         />
         {search && (
           <button onClick={() => setSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-500">✕</button>
@@ -114,8 +114,8 @@ export default function RestaurantsPage() {
           <button key={cat} onClick={() => setSelected(cat)}
             className={`shrink-0 px-4 py-2 rounded-full text-sm font-semibold transition-all ${
               selected === cat
-                ? 'bg-orange-500 text-white shadow-md shadow-orange-200 scale-105'
-                : 'bg-white text-gray-500 border border-gray-100 shadow-sm hover:border-orange-200'
+                ? 'bg-yellow-400 text-gray-900 shadow-md shadow-yellow-200 scale-105'
+                : 'bg-white text-gray-500 border border-gray-100 shadow-sm hover:border-yellow-300'
             }`}>
             {CAT_EMOJI[cat] && <span className="mr-1">{CAT_EMOJI[cat]}</span>}{cat}
           </button>
@@ -125,7 +125,7 @@ export default function RestaurantsPage() {
       {/* 식당 수 */}
       {search && (
         <p className="text-xs text-gray-400 mb-3 px-1">
-          "{search}" 검색결과 <span className="font-bold text-orange-500">{filtered.length}개</span>
+          "{search}" 검색결과 <span className="font-bold text-yellow-600">{filtered.length}개</span>
         </p>
       )}
 

@@ -132,7 +132,7 @@ export default function RestaurantPage() {
             </div>
             <div className="flex gap-2">
               <button onClick={() => setShowLoginModal(false)} className="flex-1 py-3 rounded-2xl border-2 border-gray-100 text-sm font-semibold text-gray-400">닫기</button>
-              <Link href="/auth/login" className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-orange-500 to-rose-500 text-white text-sm font-bold text-center">로그인</Link>
+              <Link href="/auth/login" className="flex-1 py-3 rounded-2xl bg-yellow-400 text-gray-900 text-sm font-bold text-center">로그인</Link>
             </div>
           </div>
         </div>
@@ -146,7 +146,7 @@ export default function RestaurantPage() {
             <p className="text-xs text-gray-400 mt-2">기존 장바구니를 비우고 새 메뉴를 담을까요?</p>
             <div className="flex gap-2 mt-5">
               <button onClick={() => setConflictItem(null)} className="flex-1 py-3 rounded-2xl border-2 border-gray-100 text-sm font-semibold text-gray-400">취소</button>
-              <button onClick={handleConflictConfirm} className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-orange-500 to-rose-500 text-white text-sm font-bold">비우고 담기</button>
+              <button onClick={handleConflictConfirm} className="flex-1 py-3 rounded-2xl bg-yellow-400 text-gray-900 text-sm font-bold">비우고 담기</button>
             </div>
           </div>
         </div>
@@ -189,10 +189,10 @@ export default function RestaurantPage() {
             <div className="flex-1 min-w-0">
               <h3 className="font-bold text-gray-900 text-sm">{item.name}</h3>
               {item.description && <p className="text-xs text-gray-400 mt-0.5 truncate">{item.description}</p>}
-              <p className="text-orange-500 font-black mt-1.5">{item.price.toLocaleString()}원</p>
+              <p className="text-yellow-600 font-black mt-1.5">{item.price.toLocaleString()}원</p>
             </div>
             <button onClick={() => addToCart(item.id, item.name)} disabled={adding === item.id}
-              className="ml-4 shrink-0 bg-gradient-to-r from-orange-500 to-rose-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:opacity-90 transition disabled:opacity-50 shadow-sm">
+              className="ml-4 shrink-0 bg-yellow-400 text-gray-900 px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-yellow-500 transition disabled:opacity-50 shadow-sm">
               {adding === item.id ? '...' : '담기'}
             </button>
           </div>
@@ -212,14 +212,14 @@ export default function RestaurantPage() {
             )}
           </div>
           <button onClick={() => setShowReviewForm(v => !v)}
-            className="bg-gradient-to-r from-orange-500 to-rose-500 text-white px-4 py-2 rounded-xl text-sm font-bold hover:opacity-90 transition shadow-sm">
+            className="bg-yellow-400 text-gray-900 px-4 py-2 rounded-xl text-sm font-bold hover:bg-yellow-500 transition shadow-sm">
             {showReviewForm ? '취소' : '✏️ 리뷰 작성'}
           </button>
         </div>
 
         {/* 리뷰 작성 폼 */}
         {showReviewForm && (
-          <div className="bg-orange-50 border border-orange-100 rounded-2xl p-4 mb-4">
+          <div className="bg-yellow-50 border border-orange-100 rounded-2xl p-4 mb-4">
             <p className="text-sm font-bold text-gray-700 mb-3">별점을 선택해주세요</p>
             <StarPicker value={reviewRating} onChange={setReviewRating} />
             <textarea value={reviewContent} onChange={e => setReviewContent(e.target.value)}
@@ -227,7 +227,7 @@ export default function RestaurantPage() {
               className="w-full mt-3 p-3 rounded-xl border border-orange-200 bg-white text-sm resize-none focus:outline-none focus:ring-2 focus:ring-orange-300"
               rows={3} />
             <button onClick={submitReview} disabled={submitting}
-              className="mt-2 w-full py-3 rounded-xl bg-gradient-to-r from-orange-500 to-rose-500 text-white font-bold text-sm hover:opacity-90 transition disabled:opacity-50">
+              className="mt-2 w-full py-3 rounded-xl bg-yellow-400 text-gray-900 font-bold text-sm hover:bg-yellow-500 transition disabled:opacity-50">
               {submitting ? '등록 중...' : '리뷰 등록하기'}
             </button>
           </div>

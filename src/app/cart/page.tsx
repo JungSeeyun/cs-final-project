@@ -69,13 +69,13 @@ export default function CartPage() {
           <p className="text-5xl mb-4">🛒</p>
           <p className="font-semibold text-gray-500">장바구니가 비어있어요</p>
           <p className="text-sm mt-1">맛있는 메뉴를 담아보세요</p>
-          <button onClick={() => router.push('/restaurants')} className="mt-6 bg-gradient-to-r from-orange-500 to-rose-500 text-white px-6 py-3 rounded-full font-bold text-sm shadow-md">
+          <button onClick={() => router.push('/restaurants')} className="mt-6 bg-yellow-400 text-gray-900 px-6 py-3 rounded-full font-bold text-sm">
             식당 보러가기
           </button>
         </div>
       ) : (
         <>
-          <div className="bg-orange-50 rounded-2xl px-4 py-3 mb-4 flex items-center gap-2">
+          <div className="bg-yellow-50 rounded-2xl px-4 py-3 mb-4 flex items-center gap-2">
             <span className="text-lg">📍</span>
             <span className="text-sm font-semibold text-orange-700">{cart[0].restaurant_name}</span>
           </div>
@@ -86,7 +86,7 @@ export default function CartPage() {
                 <div>
                   <h3 className="font-bold text-gray-900 text-sm">{item.name}</h3>
                   <p className="text-xs text-gray-400 mt-0.5">수량 {item.quantity}개</p>
-                  <p className="text-orange-500 font-black mt-1">{(item.price * item.quantity).toLocaleString()}원</p>
+                  <p className="text-gray-900 font-black mt-1">{(item.price * item.quantity).toLocaleString()}원</p>
                 </div>
                 <button
                   onClick={() => removeItem(item.id)}
@@ -107,7 +107,7 @@ export default function CartPage() {
             <button
               onClick={placeOrder}
               disabled={ordering}
-              className="w-full bg-gradient-to-r from-orange-500 to-rose-500 text-white py-4 rounded-2xl font-black text-base hover:opacity-90 transition disabled:opacity-50 shadow-md"
+              className="w-full bg-yellow-400 text-gray-900 py-4 rounded-2xl font-black text-base hover:bg-yellow-500 transition disabled:opacity-50"
             >
               {ordering ? '주문 중...' : `${total.toLocaleString()}원 주문하기`}
             </button>
