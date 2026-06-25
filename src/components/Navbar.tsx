@@ -8,8 +8,22 @@ export default function Navbar() {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const stored = localStorage.getItem('user');
-    if (stored) setUser(JSON.parse(stored));
+    // 쿠키 유효성 확인 — 만료됐으면 localStorage도 같이 삭제
+    fetch('/api/auth/me')
+      .then(r => r.json())
+      .then(data => {
+        if (data.user) {
+          setUser(data.user);
+          localStorage.setItem('user', JSON.stringify(data.user));
+        } else {
+          setUser(null);
+          localStorage.removeItem('user');
+        }
+      })
+      .catch(() => {
+        const stored = localStorage.getItem('user');
+        if (stored) setUser(JSON.parse(stored));
+      });
   }, []);
 
   async function logout() {
